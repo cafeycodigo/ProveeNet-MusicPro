@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+.env/
+
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+!.env.sample
+local_settings.py
+
+# Bases de datos locales y archivos auxiliares de SQLite
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Archivos generados por Django
+*.log
+media/
+staticfiles/
+
+# Pruebas y herramientas de Python
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+
+# Paquetes generados
+build/
+dist/
+*.egg-info/
+
+# Configuración personal de editores
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
