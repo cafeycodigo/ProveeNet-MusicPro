@@ -7,7 +7,9 @@ from django.test import TestCase
 
 from messaging.models import Conversacion
 from catalog.models import Producto
-from accounts.models import Usuario
+from django.contrib.auth import get_user_model
+
+Usuario = get_user_model()
 from companies.models import UsuarioEmpresa
 
 
@@ -32,7 +34,7 @@ class SeedTests(TestCase):
             for instance in model.objects.all():
                 instance.full_clean()
         for user in Usuario.objects.all():
-            self.assertFalse(user.has_usable_password())
+            self.assertTrue(user.has_usable_password())
 
     def test_database_rejects_invalid_stock_and_duplicate_membership(self):
         with self.assertRaises(IntegrityError), transaction.atomic():
@@ -48,6 +50,36 @@ class SeedTests(TestCase):
             Conversacion.objects.filter(pk=conversation.pk).update(
                 empresa_proveedora=conversation.empresa_compradora,
             )
+
+    def test_mass_volume_and_commercial_integrity(self):
+        from decimal import Decimal
+        from quotations.models import Cotizacion, CotizacionDetalle, OrdenCompra
+        from messaging.models import Mensaje, ParticipanteConversacion
+        for name in ["accounts", "companies", "catalog", "social", "messaging", "quotations", "collaboration", "notifications"]:
+            for model in apps.get_app_config(name).get_models():
+                self.assertGreaterEqual(model.objects.count(), 10, model.__name__)
+        self.assertGreaterEqual(Usuario.objects.count(), 100)
+        self.assertGreaterEqual(Producto.objects.count(), 200)
+        self.assertGreaterEqual(Mensaje.objects.count(), 800)
+        memberships = set(UsuarioEmpresa.objects.filter(activo=True).values_list("usuario_id", "empresa_id"))
+        participants = set(ParticipanteConversacion.objects.values_list("conversacion_id", "usuario_id"))
+        for message in Mensaje.objects.select_related("conversacion"):
+            self.assertIn((message.usuario_remitente_id, message.empresa_remitente_id), memberships)
+            self.assertIn((message.conversacion_id, message.usuario_remitente_id), participants)
+            self.assertIn(message.empresa_remitente_id, [message.conversacion.empresa_compradora_id,
+                                                       message.conversacion.empresa_proveedora_id])
+        for quote in Cotizacion.objects.all():
+            lines = list(CotizacionDetalle.objects.filter(cotizacion=quote).select_related("solicitud_detalle", "producto"))
+            self.assertEqual(quote.subtotal, sum((line.subtotal for line in lines), Decimal("0")))
+            self.assertEqual(quote.total, quote.subtotal + quote.impuestos + quote.costo_envio)
+            for line in lines:
+                self.assertEqual(line.subtotal, line.cantidad * line.precio_unitario)
+                self.assertEqual(line.solicitud_detalle.solicitud_id, quote.solicitud_proveedor.solicitud_id)
+                self.assertEqual(line.producto.empresa_id, quote.solicitud_proveedor.empresa_proveedora_id)
+        for order in OrdenCompra.objects.select_related("cotizacion"):
+            self.assertEqual(order.cotizacion.estado, "aceptada")
+            self.assertEqual(order.total, order.cotizacion.total)
+
 
 class IndividualSeederTests(TestCase):
     def test_each_command_runs_on_empty_database_and_is_repeatable(self):

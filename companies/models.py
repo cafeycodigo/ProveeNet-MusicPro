@@ -1,3 +1,4 @@
+from django.conf import settings
 """Modelos del módulo companies."""
 from django.db import models
 from django.db.models import F, Q
@@ -41,7 +42,7 @@ class Empresa(models.Model):
 
 class UsuarioEmpresa(models.Model):
     id_usuario_empresa = models.BigAutoField(primary_key=True)
-    usuario = models.ForeignKey('accounts.Usuario', on_delete=models.PROTECT, db_column='id_usuario', related_name='usuario_empresa_id_usuario_set')
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, db_column='id_usuario', related_name='usuario_empresa_id_usuario_set')
     empresa = models.ForeignKey('companies.Empresa', on_delete=models.PROTECT, db_column='id_empresa', related_name='usuario_empresa_id_empresa_set')
     rol = models.CharField(max_length=32)
     activo = models.BooleanField(default=True)

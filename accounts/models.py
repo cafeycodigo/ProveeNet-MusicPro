@@ -1,18 +1,16 @@
-"""Modelos del módulo accounts."""
-from django.contrib.auth.models import AbstractUser
+"""Datos complementarios del usuario del sistema."""
+from django.conf import settings
 from django.db import models
-from django.db.models import F, Q
-from django.utils import timezone
 
 
-class Usuario(AbstractUser):
-    id_usuario = models.BigAutoField(primary_key=True)
-    first_name = models.CharField(max_length=100, db_column="nombre")
-    last_name = models.CharField(max_length=100, blank=True, db_column="apellido")
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128, db_column="password_hash")
-    is_active = models.BooleanField(default=True, db_column="activo")
-    date_joined = models.DateTimeField(default=timezone.now, db_column="fecha_registro")
+class PerfilUsuario(models.Model):
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="perfil",
+    )
+    avatar_url = models.CharField(max_length=255, blank=True)
+    nacionalidad = models.CharField(
+        max_length=2, blank=True, help_text="Código ISO de país de nacionalidad",
+    )
 
-    class Meta:
-        db_table = 'usuario'
+    def __str__(self):
+        return f"Perfil de {self.usuario}"

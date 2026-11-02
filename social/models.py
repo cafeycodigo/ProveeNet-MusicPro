@@ -1,3 +1,4 @@
+from django.conf import settings
 """Modelos del módulo social."""
 from django.db import models
 from django.db.models import F, Q
@@ -6,7 +7,7 @@ from django.utils import timezone
 
 class Favorito(models.Model):
     id_favorito = models.BigAutoField(primary_key=True)
-    usuario = models.ForeignKey('accounts.Usuario', on_delete=models.PROTECT, db_column='id_usuario', related_name='favorito_id_usuario_set')
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, db_column='id_usuario', related_name='favorito_id_usuario_set')
     producto = models.ForeignKey('catalog.Producto', on_delete=models.PROTECT, db_column='id_producto', related_name='favorito_id_producto_set')
     fecha_creacion = models.DateTimeField(default=timezone.now)
 
@@ -22,7 +23,7 @@ class Favorito(models.Model):
 
 class SeguimientoProveedor(models.Model):
     id_seguimiento = models.BigAutoField(primary_key=True)
-    usuario = models.ForeignKey('accounts.Usuario', on_delete=models.PROTECT, db_column='id_usuario', related_name='seguimiento_proveedor_id_usuario_set')
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, db_column='id_usuario', related_name='seguimiento_proveedor_id_usuario_set')
     empresa = models.ForeignKey('companies.Empresa', on_delete=models.PROTECT, db_column='id_empresa', related_name='seguimiento_proveedor_id_empresa_set')
     fecha_seguimiento = models.DateTimeField(default=timezone.now)
 
@@ -39,7 +40,7 @@ class SeguimientoProveedor(models.Model):
 class Publicacion(models.Model):
     id_publicacion = models.BigAutoField(primary_key=True)
     empresa = models.ForeignKey('companies.Empresa', on_delete=models.PROTECT, db_column='id_empresa', related_name='publicacion_id_empresa_set')
-    usuario_autor = models.ForeignKey('accounts.Usuario', on_delete=models.PROTECT, db_column='id_usuario_autor', related_name='publicacion_id_usuario_autor_set')
+    usuario_autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, db_column='id_usuario_autor', related_name='publicacion_id_usuario_autor_set')
     titulo = models.CharField(max_length=180, blank=True, null=True)
     contenido = models.TextField()
     visibilidad = models.CharField(max_length=24)

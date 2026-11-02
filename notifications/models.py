@@ -1,3 +1,4 @@
+from django.conf import settings
 """Modelos del módulo notifications."""
 from django.db import models
 from django.db.models import F, Q
@@ -6,7 +7,7 @@ from django.utils import timezone
 
 class Notificacion(models.Model):
     id_notificacion = models.BigAutoField(primary_key=True)
-    usuario = models.ForeignKey('accounts.Usuario', on_delete=models.PROTECT, db_column='id_usuario', related_name='notificacion_id_usuario_set')
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, db_column='id_usuario', related_name='notificacion_id_usuario_set')
     tipo = models.CharField(max_length=40)
     titulo = models.CharField(max_length=180)
     contenido = models.TextField(blank=True, null=True)
@@ -28,7 +29,7 @@ class HistorialEstado(models.Model):
     entidad_id = models.BigIntegerField()
     estado_anterior = models.CharField(max_length=40, blank=True, null=True)
     estado_nuevo = models.CharField(max_length=40)
-    usuario = models.ForeignKey('accounts.Usuario', on_delete=models.SET_NULL, db_column='id_usuario', related_name='historial_estado_id_usuario_set', blank=True, null=True)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, db_column='id_usuario', related_name='historial_estado_id_usuario_set', blank=True, null=True)
     fecha_cambio = models.DateTimeField(default=timezone.now)
     observacion = models.TextField(blank=True, null=True)
 

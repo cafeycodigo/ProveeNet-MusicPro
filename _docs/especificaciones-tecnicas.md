@@ -75,11 +75,11 @@ No todas las reglas comerciales del diccionario están implementadas como valida
 
 ## 5. Autenticación, rutas y configuración
 
-`AUTH_USER_MODEL = "accounts.Usuario"`. El modelo hereda de `AbstractUser`,
-conserva `username`, grupos y permisos, y exige correo electrónico único.
-Los campos de Django `first_name`, `last_name`, `password`, `is_active` y
-`date_joined` se almacenan en las columnas `nombre`, `apellido`, `password_hash`,
-`activo` y `fecha_registro`. Las contraseñas se gestionan con los métodos de Django.
+La autenticación usa el usuario integrado de Django (`auth.User`).
+`accounts.PerfilUsuario` complementa ese usuario con una relación uno a uno
+(`usuario`, acceso inverso `user.perfil`) y almacena únicamente `avatar_url`
+y `nacionalidad`. Nombres, correo, credenciales, grupos y permisos permanecen
+en el usuario de Django. Las relaciones de negocio usan `settings.AUTH_USER_MODEL`.
 
 `core/urls.py` expone únicamente `/admin/`. Los modelos de negocio todavía no
 están registrados en el administrador y no hay endpoints API.
@@ -137,7 +137,8 @@ cuando se repiten las cargas con sus claves de búsqueda originales.
 
 Los datos ficticios incluyen una compradora chilena y una proveedora alemana,
 un osciloscopio X200, conversaciones, colaboración, una cotización y una orden.
-Los usuarios `demo_comprador` y `demo_proveedor` se crean sin contraseña utilizable.
+Los usuarios demo nuevos o sin contraseña reciben `ProveeNet2026!` (desarrollo).
+Las contraseñas personalizadas existentes se conservan salvo `--reset-passwords`.
 Para habilitar el acceso de uno de ellos:
 
 ```powershell
@@ -171,3 +172,54 @@ superpuestas y reglas de cálculo de impuestos, envío y totales.
 La especificación original propone PostgreSQL, REST, WebSockets y WebRTC.
 Su incorporación requiere dependencias, configuración, servicios y pruebas
 adicionales; la existencia de modelos no implementa esos servicios.
+
+## 10. Imágenes de demostración
+
+Los perfiles `PerfilUsuario` incluyen `avatar_url` y `nacionalidad` (código ISO
+de dos letras). Cada perfil pertenece al usuario estándar de Django mediante
+una relación uno a uno. La reorganización de autenticación mantiene su propio
+flujo de migraciones.
+
+`seed_accounts` crea 100 usuarios reutilizando diez identidades visuales de Chile, Alemania, Brasil,
+México, Japón, India, Senegal, Francia, Egipto y Corea del Sur. Sus retratos
+WebP se guardan en `accounts/static/accounts/demo/`. Los logos de la compradora
+y la proveedora están en `companies/static/companies/demo/` y se referencian
+mediante `Empresa.logo_url`.
+
+Los archivos son assets estáticos versionables y se reutilizan en cada carga.
+Django los encuentra mediante `staticfiles`; en desarrollo los sirve `runserver`
+y en despliegue se deben incluir con `collectstatic`. Los seeders usan `static()`
+para resolver las rutas y completan los campos vacíos de perfiles de ejemplo
+anteriores, conservando las imágenes y los datos personalizados existentes.
+Los 100 usuarios se distribuyen entre veinte empresas de demostración y mantienen
+membresías en las empresas del escenario original.
+
+Las imágenes fueron generadas con la herramienta integrada de generación de
+imágenes y convertidas a WebP de 512 × 512 píxeles. Los prompts y el inventario
+se documentan en [Imágenes de demostración](imagenes-demo.md).
+
+## 11. Simulación masiva
+
+El comando `seed` carga todos los modelos con escenarios comerciales relacionados
+y muestra el total de filas por modelo al finalizar. Admite `--scale`, `--password`
+y `--reset-passwords`; también lee `SEED_DEMO_PASSWORD`. Los volúmenes por modelo,
+las credenciales y los límites están en [Datos simulados](datos-simulados.md).
+
+
+## 12. Imágenes genéricas del catálogo
+
+Los veinte assets de producto se encuentran en `catalog/static/catalog/demo/products/`.
+`catalog/demo_assets.py` define las diez categorías y la carga de imágenes. Cada
+producto masivo tiene dos referencias `ProductoImagen`, compartidas con los demás
+productos de la categoría. La portada alterna entre ambas variantes por proveedor
+y serie; la segunda posición utiliza la variante restante.
+
+Los assets se generan una vez con la herramienta integrada de imágenes y se
+convierten a WebP de 768 × 768 píxeles. El seeder no genera imágenes ni descarga
+archivos: resuelve las rutas mediante `static()` y conserva las personalizaciones.
+Solo sustituye las URLs ficticias conocidas de la versión anterior. No se requieren
+migraciones para este cambio. Las imágenes se incluyen con `collectstatic` en despliegue.
+
+El osciloscopio inicial usa la imagen genérica de instrumento de medición de
+accesorios; las demás imágenes ilustran tipos de equipos y no especificaciones
+exactas de cada modelo ficticio. Ver [inventario y prompts](imagenes-productos.md).

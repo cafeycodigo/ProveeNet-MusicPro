@@ -39,6 +39,7 @@ coverage.xml
 .ruff_cache/
 
 # Paquetes generados
+node_modules/
 build/
 dist/
 *.egg-info/

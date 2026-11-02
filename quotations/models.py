@@ -1,3 +1,4 @@
+from django.conf import settings
 """Modelos del módulo quotations."""
 from django.db import models
 from django.db.models import F, Q
@@ -7,7 +8,7 @@ from django.utils import timezone
 class SolicitudCotizacion(models.Model):
     id_solicitud = models.BigAutoField(primary_key=True)
     empresa_compradora = models.ForeignKey('companies.Empresa', on_delete=models.PROTECT, db_column='id_empresa_compradora', related_name='solicitud_cotizacion_id_empresa_compradora_set')
-    usuario_creador = models.ForeignKey('accounts.Usuario', on_delete=models.PROTECT, db_column='id_usuario_creador', related_name='solicitud_cotizacion_id_usuario_creador_set')
+    usuario_creador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, db_column='id_usuario_creador', related_name='solicitud_cotizacion_id_usuario_creador_set')
     titulo = models.CharField(max_length=180)
     descripcion = models.TextField(blank=True, null=True)
     fecha_solicitud = models.DateTimeField(default=timezone.now)

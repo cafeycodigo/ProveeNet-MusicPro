@@ -135,4 +135,4 @@ MAILERS = {
     },
 }
 
-AUTH_USER_MODEL = "accounts.Usuario"
+

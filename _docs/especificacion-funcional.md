@@ -455,9 +455,11 @@ Las 29 entidades del diccionario están distribuidas por dominio:
 | `collaboration` | Catálogo compartido y llamadas |
 | `notifications` | Notificaciones e historial de estados |
 
-`Usuario` extiende la autenticación de Django (`AUTH_USER_MODEL = "accounts.Usuario"`):
-conserva `username`, permisos y grupos; `first_name`, `last_name`, `password`,
-`is_active` y `date_joined` usan las columnas del diccionario de datos.
+La autenticación usa `auth.User`, el usuario integrado de Django.
+`accounts.PerfilUsuario` agrega `avatar_url` y `nacionalidad` mediante una
+relación uno a uno (`usuario`, acceso inverso `user.perfil`). Las relaciones
+de negocio apuntan a `settings.AUTH_USER_MODEL`.
+
 
 En PowerShell, desde la raíz del proyecto:
 
