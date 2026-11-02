@@ -1,0 +1,12 @@
+{% extends 'app/portal/base.html' %}
+{% block portal_content %}
+<section class="portal-panel team-editor"><div class="panel-heading"><div><h2>Quitar miembro del equipo</h2><p>Confirma la membresía que quieres eliminar.</p></div></div>
+  <form method="post" class="team-form">
+    {% csrf_token %}
+    {% if errores %}<div class="form-alert" role="alert">{% for error in errores %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+    <div class="team-confirm-person"><strong>{{ miembro.usuario.get_full_name|default:miembro.usuario.username }}</strong><span>{{ miembro.usuario.username }} · {{ miembro.rol|capfirst }}</span><span>{{ ctx.company.razon_social }}</span></div>
+    <p class="team-info">Esta acción quita el acceso de la persona a esta empresa. Su usuario, sus otras membresías y los registros comerciales se conservan.</p>
+    <div class="team-form-actions"><button type="submit" class="portal-button danger">Quitar del equipo</button><a class="portal-button secondary" href="{% url 'app:dashboard_equipo' %}">Cancelar</a></div>
+  </form>
+</section>
+{% endblock %}

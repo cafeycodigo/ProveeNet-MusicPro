@@ -1,0 +1,24 @@
+{% extends 'app/portal/base.html' %}
+{% block portal_content %}
+<section class="portal-panel team-editor">
+  <div class="panel-heading">
+    <div>
+      <h2>Eliminar producto</h2>
+      <p>Confirma que quieres quitar este producto del catálogo.</p>
+    </div>
+  </div>
+  <form method="post" class="team-form">
+    {% csrf_token %}
+    <div class="team-confirm-person">
+      <strong>{{ producto.nombre }}</strong>
+      <span>Código: {{ producto.sku }}</span>
+      <span>{{ ctx.company.razon_social }}</span>
+    </div>
+    <p class="team-info">Si el producto tiene ofertas, imágenes u otros datos relacionados, no se podrá eliminar. En ese caso puedes editarlo y dejarlo inactivo.</p>
+    <div class="team-form-actions">
+      <button type="submit" class="portal-button danger">Eliminar producto</button>
+      <a class="portal-button secondary" href="{% url 'app:dashboard_catalogo' %}">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -20,7 +20,24 @@
       <div class="form-field"><label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label><div class="password-field">{{ form.password }}<button type="button" data-password-toggle aria-controls="id_password" aria-pressed="false">Mostrar</button></div></div>
       <button class="portal-button primary" type="submit" data-loading-label="Entrando…">Iniciar sesión <span aria-hidden="true">→</span></button>
     </form>
+    {% if demo_accounts %}
+    <div class="demo-access-trigger"><span>¿Quieres conocer la plataforma?</span><button class="portal-button secondary" type="button" id="open-demo-access" aria-haspopup="dialog" aria-controls="demo-access-dialog"><svg class="p-icon" aria-hidden="true"><use href="#p-users"/></svg>Accesos de demostración</button></div>
+    <p class="demo-fill-status" id="demo-fill-status" role="status" aria-live="polite"></p>
+    {% endif %}
     <p class="auth-help">Tu acceso se adapta a tu perfil y a las empresas a las que perteneces. Si necesitas una cuenta, contacta al administrador de tu empresa.</p>
     <div class="auth-bottom"><svg class="p-icon" aria-hidden="true"><use href="#p-check"/></svg>Acceso seguro a tu cuenta de ProveeNet</div>
   </div><p class="auth-copyright">ProveeNet · Conecta con tus proveedores</p></section>
-</main></body></html>
+</main>
+{% if demo_accounts %}
+{{ demo_accounts|json_script:"demo-accounts-data" }}
+<dialog class="demo-access-dialog" id="demo-access-dialog" aria-labelledby="demo-dialog-title" aria-describedby="demo-dialog-description">
+  <div class="demo-dialog-header"><span class="auth-symbol"><svg class="p-icon" aria-hidden="true"><use href="#p-users"/></svg></span><button class="demo-dialog-close" type="button" id="close-demo-access" aria-label="Cerrar accesos de demostración">×</button></div>
+  <p class="portal-eyebrow">CONOCE CADA ESPACIO</p><h2 id="demo-dialog-title">¿Con qué perfil quieres ingresar?</h2>
+  <p id="demo-dialog-description">Elige una cuenta de prueba. Completaremos el correo o usuario y la contraseña en el formulario de acceso.</p>
+  <div class="demo-account-list">{% for account in demo_accounts %}
+    <button class="demo-account-option" type="button" data-demo-account="{{ forloop.counter0 }}" aria-label="Usar cuenta: {{ account.title }}"><span class="demo-account-icon"><svg class="p-icon" aria-hidden="true"><use href="#p-{{ account.icon }}"/></svg></span><span class="demo-account-info"><strong>{{ account.title }}</strong><span>{{ account.description }}</span><small>{{ account.email|default:account.username }}</small></span><span class="demo-account-arrow" aria-hidden="true">→</span></button>
+  {% endfor %}</div>
+  <div class="demo-dialog-footer"><svg class="p-icon" aria-hidden="true"><use href="#p-check"/></svg><p>Cuentas ficticias del entorno de desarrollo. Después de elegir, pulsa <strong>Iniciar sesión</strong>.</p></div>
+</dialog>
+{% endif %}
+</body></html>

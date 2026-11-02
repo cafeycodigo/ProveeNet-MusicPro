@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from accounts.portal import MENU, get_portal_context
+from accounts.portal import MENU, SECTION_URL_NAMES, get_portal_context
 from catalog.models import Categoria, Oferta, Producto
 from collaboration.models import Llamada
 from companies.models import Empresa, UsuarioEmpresa
@@ -65,12 +65,31 @@ def section_table(request, ctx, data, section):
     q = request.GET.get("q", "").strip()[:180]
     rows, headers = [], []
     if section in {"productos", "catalogo", "explorar"}:
+        # data["products"] ya está limitado al espacio al que tiene acceso el usuario.
         qs = data["products"]
         if q:
-            qs = qs.filter(Q(nombre__icontains=q) | Q(empresa__razon_social__icontains=q) | Q(sku__icontains=q))
+            qs = qs.filter(
+                Q(nombre__icontains=q)
+                | Q(empresa__razon_social__icontains=q)
+                | Q(sku__icontains=q)
+            )
         headers = ["Producto", "Empresa", "Categoría", "Referencia", "Estado"]
-        rows = [[p.nombre, p.empresa.razon_social, p.categoria.nombre, money(p.precio_referencia, p.moneda),
-                 "Activo" if p.activo else "Inactivo"] for p in qs.order_by("-pk")[:100]]
+        if section == "catalogo":
+            headers.append("Acciones")
+
+        for producto in qs.order_by("-pk")[:100]:
+            precio = money(producto.precio_referencia, producto.moneda)
+            estado = "Activo" if producto.activo else "Inactivo"
+            fila = [
+                producto.nombre,
+                producto.empresa.razon_social,
+                producto.categoria.nombre,
+                precio,
+                estado,
+            ]
+            if section == "catalogo":
+                fila.append(producto.pk)
+            rows.append(fila)
     elif section in {"empresas", "proveedores"}:
         qs = Empresa.objects.select_related("pais")
         if not ctx.platform:
@@ -89,13 +108,6 @@ def section_table(request, ctx, data, section):
         rows = [[u.username, u.get_full_name() or "Sin nombre", u.email or "Sin correo",
                  "Plataforma" if u.is_superuser else "Personal de administración" if u.is_staff else "Usuario",
                  "Activo" if u.is_active else "Inactivo"] for u in qs.order_by("username")[:100]]
-    elif section == "equipo":
-        headers = ["Usuario", "Nombre", "Rol en la empresa", "Estado"]
-        qs = UsuarioEmpresa.objects.filter(empresa=ctx.company).select_related("usuario")
-        if q:
-            qs = qs.filter(usuario__username__icontains=q)
-        rows = [[m.usuario.username, m.usuario.get_full_name() or "Sin nombre", m.rol,
-                 "Activo" if m.activo and m.usuario.is_active else "Inactivo"] for m in qs[:100]]
     elif section == "cotizaciones":
         headers = ["Solicitud", "Proveedor", "Versión", "Total", "Estado"]
         qs = data["quotes"]
@@ -157,8 +169,8 @@ def section_table(request, ctx, data, section):
     return headers, rows
 
 
-@login_required
-def dashboard(request, section="inicio"):
+def _render_dashboard(request, section):
+    """Preparación compartida de datos. Las vistas públicas están definidas abajo."""
     ctx = get_portal_context(request)
     allowed = {item["key"] for item in ctx.navigation}
     if section not in allowed:
@@ -195,12 +207,13 @@ def dashboard(request, section="inicio"):
     company_options = Empresa.objects.filter(estado="activa").order_by("razon_social") if request.user.is_superuser else [m.empresa for m in ctx.memberships]
     return render(request, "app/portal/dashboard.html", {
         "ctx": ctx, "navigation": ctx.navigation, "section": section, "page_title": MENU[section][0],
-        "greeting": greeting, "metrics": [{"label": label, "value": value, "icon": icon, "section": target}
+        "greeting": greeting, "metrics": [{"label": label, "value": value, "icon": icon, "section": target, "url_name": SECTION_URL_NAMES[target]}
                                           for label, value, icon, target in metrics if target in allowed],
         "table_headers": headers, "table_rows": rows,
         "table_title": MENU[overview_section][0] if section == "inicio" else MENU[section][0],
-        "overview_section": overview_section, "query": request.GET.get("q", "")[:180],
-        "search_section": "catalogo" if ctx.mode == "supplier" else "explorar" if ctx.mode == "individual" else "productos",
+        "overview_section": overview_section, "overview_url_name": SECTION_URL_NAMES[overview_section],
+        "page_url_name": SECTION_URL_NAMES[section], "query": request.GET.get("q", "")[:180],
+        "search_url_name": SECTION_URL_NAMES["catalogo" if ctx.mode == "supplier" else "explorar" if ctx.mode == "individual" else "productos"],
         "searchable": section in {"empresas", "proveedores", "productos", "catalogo", "explorar", "usuarios", "equipo", "cotizaciones", "pedidos", "mensajes", "ofertas", "categorias", "publicaciones"},
         "company_options": company_options,
         "notifications": data["notifications"].order_by("-fecha_creacion")[:4],
@@ -231,3 +244,116 @@ def switch_context(request):
     request.session["portal_company"] = company.pk
     request.session["portal_mode"] = mode
     return redirect("app:dashboard")
+
+
+# Vistas de cada página: permite seguir urls.py y encontrar su función directamente.
+@login_required
+def dashboard(request):
+    """Inicio del espacio de trabajo según el perfil del usuario."""
+    return _render_dashboard(request, "inicio")
+
+
+@login_required
+def explorar(request):
+    """Página de explorar del espacio de trabajo."""
+    return _render_dashboard(request, "explorar")
+
+
+@login_required
+def proveedores(request):
+    """Página de proveedores del espacio de trabajo."""
+    return _render_dashboard(request, "proveedores")
+
+
+@login_required
+def productos(request):
+    """Página de productos del espacio de trabajo."""
+    return _render_dashboard(request, "productos")
+
+
+@login_required
+def catalogo(request):
+    """Muestra el catálogo del proveedor dentro del espacio de trabajo.
+
+    _render_dashboard prepara la empresa autorizada y encuentra sus productos.
+    La plantilla del panel muestra el resultado en una tabla.
+    """
+    return _render_dashboard(request, "catalogo")
+
+
+@login_required
+def ofertas(request):
+    """Página de ofertas del espacio de trabajo."""
+    return _render_dashboard(request, "ofertas")
+
+
+@login_required
+def favoritos(request):
+    """Página de favoritos del espacio de trabajo."""
+    return _render_dashboard(request, "favoritos")
+
+
+@login_required
+def mensajes(request):
+    """Página de mensajes del espacio de trabajo."""
+    return _render_dashboard(request, "mensajes")
+
+
+@login_required
+def cotizaciones(request):
+    """Página de cotizaciones del espacio de trabajo."""
+    return _render_dashboard(request, "cotizaciones")
+
+
+@login_required
+def reuniones(request):
+    """Página de reuniones del espacio de trabajo."""
+    return _render_dashboard(request, "reuniones")
+
+
+@login_required
+def pedidos(request):
+    """Página de pedidos del espacio de trabajo."""
+    return _render_dashboard(request, "pedidos")
+
+
+@login_required
+def empresa(request):
+    """Página de empresa del espacio de trabajo."""
+    return _render_dashboard(request, "empresa")
+
+
+@login_required
+def empresas(request):
+    """Página de empresas del espacio de trabajo."""
+    return _render_dashboard(request, "empresas")
+
+
+@login_required
+def usuarios(request):
+    """Página de usuarios del espacio de trabajo."""
+    return _render_dashboard(request, "usuarios")
+
+
+@login_required
+def categorias(request):
+    """Página de categorias del espacio de trabajo."""
+    return _render_dashboard(request, "categorias")
+
+
+@login_required
+def publicaciones(request):
+    """Página de publicaciones del espacio de trabajo."""
+    return _render_dashboard(request, "publicaciones")
+
+
+@login_required
+def notificaciones(request):
+    """Página de notificaciones del espacio de trabajo."""
+    return _render_dashboard(request, "notificaciones")
+
+
+@login_required
+def perfil(request):
+    """Página de perfil del espacio de trabajo."""
+    return _render_dashboard(request, "perfil")

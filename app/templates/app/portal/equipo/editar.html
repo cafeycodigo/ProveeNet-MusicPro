@@ -1,0 +1,13 @@
+{% extends 'app/portal/base.html' %}
+{% block portal_content %}
+<section class="portal-panel team-editor"><div class="panel-heading"><div><h2>Editar membresía</h2><p>{{ miembro.usuario.get_full_name|default:miembro.usuario.username }} · {{ miembro.usuario.username }}</p></div></div>
+  <form method="post" class="team-form">
+    {% csrf_token %}
+    {% if errores %}<div class="form-alert" role="alert">{% for error in errores %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+    {% if miembro.usuario_id == request.user.pk %}<p class="team-info">Esta es tu membresía. Otro administrador debe realizar cualquier cambio en tu rol o estado.</p>{% endif %}
+    <div class="form-field"><label for="rol">Rol en la empresa</label><select name="rol" id="rol" required><option value="ejecutivo" {% if datos.rol == 'ejecutivo' %}selected{% endif %}>Ejecutivo</option><option value="administrador" {% if datos.rol == 'administrador' %}selected{% endif %}>Administrador</option></select><small>Este permiso se aplica solo a {{ ctx.company.razon_social }}.</small></div>
+    <label class="team-check"><input type="checkbox" name="activo" {% if datos.activo %}checked{% endif %}><span>Miembro activo<small>Desmarcar impide acceder a esta empresa, sin desactivar su usuario del sistema.</small></span></label>
+    <div class="team-form-actions"><button type="submit" class="portal-button primary">Guardar cambios</button><a class="portal-button secondary" href="{% url 'app:dashboard_equipo' %}">Cancelar</a></div>
+  </form>
+</section>
+{% endblock %}

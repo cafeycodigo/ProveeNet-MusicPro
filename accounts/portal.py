@@ -18,6 +18,30 @@ MENU = {
 }
 
 
+# Nombres explícitos de las rutas usadas por el menú y las tarjetas.
+SECTION_URL_NAMES = {
+    "inicio": "app:dashboard",
+    "explorar": "app:dashboard_explorar",
+    "proveedores": "app:dashboard_proveedores",
+    "productos": "app:dashboard_productos",
+    "catalogo": "app:dashboard_catalogo",
+    "ofertas": "app:dashboard_ofertas",
+    "favoritos": "app:dashboard_favoritos",
+    "mensajes": "app:dashboard_mensajes",
+    "cotizaciones": "app:dashboard_cotizaciones",
+    "reuniones": "app:dashboard_reuniones",
+    "pedidos": "app:dashboard_pedidos",
+    "empresa": "app:dashboard_empresa",
+    "equipo": "app:dashboard_equipo",
+    "empresas": "app:dashboard_empresas",
+    "usuarios": "app:dashboard_usuarios",
+    "categorias": "app:dashboard_categorias",
+    "publicaciones": "app:dashboard_publicaciones",
+    "notificaciones": "app:dashboard_notificaciones",
+    "perfil": "app:dashboard_perfil",
+}
+
+
 @dataclass
 class PortalContext:
     company: object
@@ -53,7 +77,8 @@ class PortalContext:
             if self.is_company_admin:
                 keys += ["equipo"]
             keys += ["notificaciones", "perfil"]
-        return [{"key": key, "label": MENU[key][0], "icon": MENU[key][1]} for key in keys]
+        return [{"key": key, "label": MENU[key][0], "icon": MENU[key][1],
+                 "url_name": SECTION_URL_NAMES[key]} for key in keys]
 
 
 def get_portal_context(request):

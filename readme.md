@@ -156,6 +156,53 @@ python manage.py create_platform_admin
 
 El comando muestra la contraseña inicial una vez y conserva cuentas existentes.
 También puedes usar `createsuperuser` y gestionar su contraseña con `changepassword`.
-El cierre de sesión y el cambio de contexto usan POST con CSRF. Los listados comerciales
-son vistas de consulta: enviar mensajes, realizar llamadas o editar cotizaciones
-requiere completar esos módulos y no se simula como una operación terminada.
+El cierre de sesión y el cambio de contexto usan POST con CSRF. El catálogo del
+proveedor permite crear, editar y eliminar productos desde sus rutas específicas.
+Los listados de mensajes, reuniones y cotizaciones son vistas de consulta; sus
+operaciones se habilitarán cuando se completen esos módulos.
+
+### Modal de accesos de demostración
+
+En desarrollo, `/login` incluye **Accesos de demostración**. El modal centrado
+permite elegir una cuenta ficticia y completar el formulario sin iniciar sesión
+hasta pulsar el botón de acceso. Se acepta usuario o correo único, sin distinguir
+mayúsculas en el correo. Para completar las cuentas del selector:
+
+```powershell
+python manage.py seed
+python manage.py seed_demo_access
+```
+
+La contraseña demo procede de `SEED_DEMO_PASSWORD` o de la clave demo del seeder.
+El selector solo incluye cuentas demo activas cuya contraseña coincida. No cambia
+contraseñas existentes ni publica el acceso de `admin_proveenet`. Si `DEBUG=False`
+o `DEMO_LOGIN_ENABLED=False`, el modal y sus credenciales no se envían al navegador.
+
+### Rutas explícitas para estudiar el panel
+
+Cada pantalla tiene su propia ruta y función en `app/urls.py` y `app/dashboard.py`.
+Por ejemplo, `/home/productos` llama a `productos(request)` y tiene el nombre
+`app:dashboard_productos`; `/home/mensajes` llama a `mensajes(request)` y tiene
+el nombre `app:dashboard_mensajes`. No hay una ruta que capture cualquier sección.
+
+Las funciones de cada pantalla están protegidas con `login_required`. Comparten
+el auxiliar privado `_render_dashboard` para preparar el diseño y aplicar los
+permisos, sin repetir esas reglas en cada vista. `SECTION_URL_NAMES` contiene los
+nombres explícitos que usan el menú y las tarjetas para enlazar las pantallas.
+
+### CRUD didáctico del equipo
+
+`/home/equipo` permite listar, agregar, editar y quitar miembros de la empresa
+activa. Usa formularios HTML y `request.POST`, sin Django Forms ni ModelForm.
+El código está en `companies/team_views.py`, con rutas explícitas en `app/urls.py`
+y una plantilla por operación. El [recorrido para estudiantes](_docs/crud-equipo.md)
+explica cada paso y sus validaciones. Quitar un miembro conserva su usuario.
+
+### CRUD didáctico del catálogo
+
+En `/home/catalogo`, el proveedor puede administrar sus productos. El listado y
+las operaciones de crear, editar y eliminar tienen rutas propias en `app/urls.py`.
+Las vistas están en `catalog/views.py` y el formulario que valida los datos en
+`catalog/forms.py`. Cada operación usa la empresa activa para limitar qué productos
+puede modificar el usuario; eliminar requiere confirmación y no permite borrar
+productos que tengan información relacionada.

@@ -129,6 +129,11 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'app:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
+# Accesos ficticios del entorno local. Nunca se muestran si DEBUG=False.
+import os
+DEMO_LOGIN_ENABLED = DEBUG
+DEMO_LOGIN_PASSWORD = os.environ.get('SEED_DEMO_PASSWORD', 'ProveeNet2026!')
+
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration

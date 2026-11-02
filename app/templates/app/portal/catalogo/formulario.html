@@ -1,0 +1,36 @@
+{% extends 'app/portal/base.html' %}
+{% block portal_content %}
+<section class="portal-panel team-editor">
+  <div class="panel-heading">
+    <div>
+      <h2>{{ titulo }}</h2>
+      <p>Este producto se guardará en el catálogo de {{ ctx.company.razon_social }}.</p>
+    </div>
+  </div>
+  <form method="post" class="team-form">
+    {% csrf_token %}
+    {% if formulario.non_field_errors %}
+      <div class="form-alert" role="alert">{{ formulario.non_field_errors }}</div>
+    {% endif %}
+    {% for campo in formulario %}
+      {% if campo.field.widget.input_type == "checkbox" %}
+        <label class="team-check">
+          {{ campo }}
+          <span>{{ campo.label }}{% if campo.help_text %}<small>{{ campo.help_text }}</small>{% endif %}</span>
+        </label>
+      {% else %}
+        <div class="form-field">
+          <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+          {{ campo }}
+          {% if campo.help_text %}<small>{{ campo.help_text }}</small>{% endif %}
+          {% for error in campo.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+    <div class="team-form-actions">
+      <button type="submit" class="portal-button primary">{{ texto_boton }}</button>
+      <a class="portal-button secondary" href="{% url 'app:dashboard_catalogo' %}">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

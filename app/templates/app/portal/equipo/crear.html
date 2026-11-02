@@ -1,0 +1,13 @@
+{% extends 'app/portal/base.html' %}
+{% block portal_content %}
+<section class="portal-panel team-editor"><div class="panel-heading"><div><h2>Agregar miembro</h2><p>Vincula una cuenta existente con {{ ctx.company.razon_social }}.</p></div></div>
+  <form method="post" class="team-form">
+    {% csrf_token %}
+    {% if errores %}<div class="form-alert" role="alert">{% for error in errores %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+    <div class="form-field"><label for="identificador">Usuario o correo de la cuenta</label><input type="text" id="identificador" name="identificador" value="{{ datos.identificador }}" maxlength="254" placeholder="Ejemplo: demo_sofia" required aria-describedby="cuenta-ayuda"><small id="cuenta-ayuda">La persona debe tener una cuenta de ProveeNet. Aquí solo creas su membresía en la empresa.</small></div>
+    <div class="form-field"><label for="rol">Rol en la empresa</label><select name="rol" id="rol" required><option value="ejecutivo" {% if datos.rol == 'ejecutivo' %}selected{% endif %}>Ejecutivo</option><option value="administrador" {% if datos.rol == 'administrador' %}selected{% endif %}>Administrador</option></select><small>El administrador puede gestionar los miembros de esta empresa. Este rol no concede administración de la plataforma.</small></div>
+    <label class="team-check"><input type="checkbox" name="activo" {% if datos.activo %}checked{% endif %}><span>Miembro activo<small>Permite acceder al espacio de esta empresa.</small></span></label>
+    <div class="team-form-actions"><button type="submit" class="portal-button primary">Guardar miembro</button><a class="portal-button secondary" href="{% url 'app:dashboard_equipo' %}">Cancelar</a></div>
+  </form>
+</section>
+{% endblock %}

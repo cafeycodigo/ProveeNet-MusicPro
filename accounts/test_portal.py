@@ -2,14 +2,28 @@ from io import StringIO
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from django.test import Client, TestCase
-from django.urls import reverse
+from django.test import Client, SimpleTestCase, TestCase
+from django.urls import Resolver404, resolve, reverse
 
+from accounts.portal import SECTION_URL_NAMES
 from catalog.models import Categoria, Producto
 from companies.models import Empresa, Pais, UsuarioEmpresa
 from messaging.models import Conversacion, ParticipanteConversacion
 from notifications.models import Notificacion
 from quotations.models import Cotizacion, SolicitudCotizacion, SolicitudProveedor
+
+
+class ExplicitPortalRoutesTests(SimpleTestCase):
+    def test_each_section_has_its_own_named_view(self):
+        for section, url_name in SECTION_URL_NAMES.items():
+            with self.subTest(section=section):
+                match = resolve(reverse(url_name))
+                self.assertEqual(match.func.__name__, "dashboard" if section == "inicio" else section)
+                self.assertEqual(match.kwargs, {})
+
+    def test_unknown_section_does_not_match_a_generic_route(self):
+        with self.assertRaises(Resolver404):
+            resolve("/home/seccion-inexistente")
 
 
 class PortalTests(TestCase):
@@ -45,7 +59,7 @@ class PortalTests(TestCase):
         Notificacion.objects.create(usuario=cls.buyer, tipo="demo", titulo="Aviso privado de Camila")
 
     def section(self, name):
-        return reverse("app:dashboard_section", kwargs={"section": name})
+        return reverse(SECTION_URL_NAMES[name])
 
     def test_anonymous_is_redirected_to_login(self):
         response = self.client.get(reverse("app:dashboard"))
