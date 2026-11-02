@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Iniciar sesión · ProveeNet</title>
+  <link rel="stylesheet" href="{% static 'app/css/site.css' %}"><link rel="stylesheet" href="{% static 'app/css/portal.css' %}">
+  <script src="{% static 'app/js/portal.js' %}" defer></script>
+</head><body class="auth-page font-sans">
+{% include 'app/portal/icons.html' %}
+<main class="auth-layout">
+  <section class="auth-story"><a class="portal-brand" href="{% url 'app:home' %}"><span class="portal-logo"><svg class="p-icon" aria-hidden="true"><use href="#p-box"/></svg></span><span>ProveeNet<small>Red de Proveedores B2B</small></span></a>
+    <div class="auth-story-content"><p class="portal-eyebrow">TU ESPACIO DE TRABAJO</p><h1>Las mejores conexiones<br>empiezan aquí.</h1><p>Tu empresa, tus productos y tus relaciones comerciales. Un mismo lugar para seguir avanzando.</p><img src="{% static 'app/images/global-network.svg' %}" width="400" height="400" alt="Red global de proveedores"></div>
+    <p class="auth-story-footer">Abastecimiento local e internacional</p>
+  </section>
+  <section class="auth-form-area"><a class="back-link" href="{% url 'app:home' %}">← Volver al sitio</a><div class="auth-form-wrap">
+    <span class="auth-symbol"><svg class="p-icon" aria-hidden="true"><use href="#p-user"/></svg></span>
+    <p class="portal-eyebrow">ACCESO A LA PLATAFORMA</p><h2>Bienvenido de nuevo</h2><p class="auth-lede">Inicia sesión para entrar a tu espacio de trabajo.</p>
+    <form method="post" class="portal-form" data-loading-form>{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
+      {% if form.errors %}<div class="form-alert" role="alert">{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}{% for field in form %}{% for error in field.errors %}<p>{{ field.label }}: {{ error }}</p>{% endfor %}{% endfor %}</div>{% endif %}
+      <div class="form-field"><label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>{{ form.username }}</div>
+      <div class="form-field"><label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label><div class="password-field">{{ form.password }}<button type="button" data-password-toggle aria-controls="id_password" aria-pressed="false">Mostrar</button></div></div>
+      <button class="portal-button primary" type="submit" data-loading-label="Entrando…">Iniciar sesión <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-help">Tu acceso se adapta a tu perfil y a las empresas a las que perteneces. Si necesitas una cuenta, contacta al administrador de tu empresa.</p>
+    <div class="auth-bottom"><svg class="p-icon" aria-hidden="true"><use href="#p-check"/></svg>Acceso seguro a tu cuenta de ProveeNet</div>
+  </div><p class="auth-copyright">ProveeNet · Conecta con tus proveedores</p></section>
+</main></body></html>

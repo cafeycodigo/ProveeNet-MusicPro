@@ -1,8 +1,25 @@
+import json
+from pathlib import Path
+
+from django.conf import settings
 from django.db.models import Count, Prefetch, Q
+from django.http import FileResponse, Http404
 from django.shortcuts import render
 
 from catalog.models import Categoria, Producto
 from companies.models import Empresa, Pais
+
+
+def presentation(request):
+    slides = json.loads((Path(__file__).with_name("presentation_data.json")).read_text(encoding="utf-8"))
+    return render(request, "app/presentation.html", {"slides": slides})
+
+
+def presentation_download(request):
+    path = settings.BASE_DIR / "entregables" / "ProveeNet-presentacion.pptx"
+    if not path.is_file():
+        raise Http404("La presentación todavía no está disponible.")
+    return FileResponse(path.open("rb"), as_attachment=True, filename=path.name)
 
 
 def home(request):

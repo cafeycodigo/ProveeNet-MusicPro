@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.contrib.auth.views import LoginView
 
-# Create your views here.
+from .forms import PortalAuthenticationForm
+
+
+class PortalLoginView(LoginView):
+    template_name = "app/portal/login.html"
+    authentication_form = PortalAuthenticationForm
+    redirect_authenticated_user = True

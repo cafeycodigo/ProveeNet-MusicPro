@@ -25,11 +25,18 @@ python manage.py runserver
 
 El servidor local queda disponible en `http://127.0.0.1:8000/`.
 La página principal está en `/` y el administrador en `/admin/`.
-Para acceder al administrador, crea una cuenta:
+Actualmente no hay cuentas de administrador en la base local. Los usuarios
+`demo_comprador` y `demo_proveedor` son cuentas normales y no pueden entrar al admin.
+
+Para crear tu administrador, ejecuta:
 
 ```powershell
-python manage.py createsuperuser
+python manage.py createsuperuser --username admin --email admin@example.com
 ```
+
+El comando solicita la contraseña de forma interactiva. Después podrás entrar en
+`http://127.0.0.1:8000/admin/` con el usuario `admin` y la contraseña que hayas elegido.
+El seeder no crea administradores ni asigna permisos de administración.
 
 ## Organización
 
@@ -103,3 +110,11 @@ El buscador permite elegir alcance global, local o internacional respecto al cam
 `Tu país`. El país de referencia predeterminado es Chile cuando existe en el catálogo;
 si no hay un país válido seleccionado, la búsqueda usa alcance global. Las cifras de
 países y proveedores corresponden a empresas activas registradas, no a cobertura prometida.
+
+## Presentación del proyecto
+
+Abre `/app/presentacion` para ver las once diapositivas del proyecto. Incluye
+navegación con flechas, selector, pantalla completa, impresión a PDF y descarga
+del PPTX editable en `entregables/ProveeNet-presentacion.pptx`. El contenido web
+se mantiene en `app/presentation_data.json`. Las funciones previstas se distinguen
+de las que ya están implementadas.

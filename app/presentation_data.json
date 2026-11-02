@@ -1,0 +1,339 @@
+[
+  {
+    "kind": "cover",
+    "title": "ProveeNet",
+    "summary": "Plataforma B2B de proveedores y productos locales e internacionales",
+    "left_title": "El proyecto",
+    "left": [
+      {
+        "label": "Propósito",
+        "text": "Conectar empresas compradoras con proveedores y organizar su relación comercial."
+      }
+    ],
+    "right_title": "",
+    "right": [],
+    "note": "Propuesta del proyecto y estado actual del repositorio. La visión global no implica cobertura comercial en todos los países.",
+    "sources": "readme.md; app/views.py"
+  },
+  {
+    "kind": "columns",
+    "title": "El problema y la propuesta",
+    "summary": "Las empresas necesitan encontrar opciones de suministro y conservar el contexto de cada compra.",
+    "left_title": "Necesidad",
+    "left": [
+      {
+        "label": "Descubrimiento",
+        "text": "Encontrar empresas que ofrezcan el producto requerido."
+      },
+      {
+        "label": "Información",
+        "text": "Revisar país, catálogo y datos del proveedor."
+      },
+      {
+        "label": "Seguimiento",
+        "text": "Mantener el historial de la relación comercial."
+      }
+    ],
+    "right_title": "Propuesta de ProveeNet",
+    "right": [
+      {
+        "label": "Un directorio común",
+        "text": "Búsqueda por empresa, producto, categoría y país."
+      },
+      {
+        "label": "Alcance configurable",
+        "text": "Opciones locales e internacionales según el país del comprador."
+      },
+      {
+        "label": "Continuidad comercial",
+        "text": "Una base de datos preparada para conversaciones y cotizaciones."
+      }
+    ],
+    "note": "Los puntos de necesidad describen el problema que aborda la propuesta, no resultados de un estudio de mercado.",
+    "sources": "_docs/especificacion-funcional.md; app/views.py"
+  },
+  {
+    "kind": "columns",
+    "title": "Quiénes participan",
+    "summary": "El sistema organiza la relación entre personas y empresas.",
+    "left_title": "Empresas compradoras",
+    "left": [
+      {
+        "label": "Buscan productos",
+        "text": "Exploran proveedores y consultan sus catálogos."
+      },
+      {
+        "label": "Evalúan alternativas",
+        "text": "Distinguen opciones de su país y de otros mercados."
+      }
+    ],
+    "right_title": "Empresas proveedoras",
+    "right": [
+      {
+        "label": "Presentan su oferta",
+        "text": "Sus productos se vinculan a categorías y a una empresa."
+      },
+      {
+        "label": "Gestionan la relación",
+        "text": "El modelo contempla respuestas comerciales e historial de conversación."
+      }
+    ],
+    "note": "Una persona usa el usuario integrado de Django y puede pertenecer a empresas mediante UsuarioEmpresa. PerfilUsuario agrega avatar y nacionalidad con una relación uno a uno.",
+    "sources": "accounts/models.py; companies/models.py; catalog/models.py"
+  },
+  {
+    "kind": "columns",
+    "title": "Abastecimiento local e internacional",
+    "summary": "La clasificación toma como referencia el campo «Tu país».",
+    "left_title": "Búsqueda local",
+    "left": [
+      {
+        "label": "Mismo país",
+        "text": "Incluye proveedores registrados en el país seleccionado como origen."
+      },
+      {
+        "label": "Ejemplo",
+        "text": "Con origen Chile, «Locales» filtra empresas de Chile."
+      }
+    ],
+    "right_title": "Búsqueda internacional",
+    "right": [
+      {
+        "label": "Otros países",
+        "text": "Incluye proveedores de países distintos al origen seleccionado."
+      },
+      {
+        "label": "Filtros combinables",
+        "text": "El alcance funciona junto con producto, categoría y país del proveedor."
+      }
+    ],
+    "note": "Esta función clasifica proveedores por país. No calcula fletes, aduanas ni disponibilidad de exportación. La cobertura depende de los registros existentes.",
+    "sources": "app/views.py; app/tests.py"
+  },
+  {
+    "kind": "modules",
+    "title": "Partes del sistema: identidad y catálogo",
+    "summary": "Estos módulos sostienen la información principal del proyecto.",
+    "left_title": "Acceso y empresas",
+    "left": [
+      {
+        "label": "accounts",
+        "text": "Perfil complementario del usuario de Django."
+      },
+      {
+        "label": "companies",
+        "text": "Países, empresas y membresías de usuarios."
+      }
+    ],
+    "right_title": "Productos y entrada al sistema",
+    "right": [
+      {
+        "label": "catalog",
+        "text": "Categorías, productos, imágenes y ofertas."
+      },
+      {
+        "label": "app",
+        "text": "Página pública, buscador y presentación del proyecto."
+      },
+      {
+        "label": "core",
+        "text": "Configuración, rutas y coordinación de los seeders."
+      }
+    ],
+    "note": "Las aplicaciones separan responsabilidades. Los seeders cargan ejemplos y resuelven sus dependencias.",
+    "sources": "core/settings.py; core/seeding.py; accounts/models.py; companies/models.py; catalog/models.py; app/urls.py"
+  },
+  {
+    "kind": "modules",
+    "title": "Partes del sistema: relación comercial",
+    "summary": "Los modelos preparan la continuidad de una compra después del descubrimiento.",
+    "left_title": "Comunicación y red",
+    "left": [
+      {
+        "label": "messaging",
+        "text": "Conversaciones, mensajes y productos compartidos."
+      },
+      {
+        "label": "social",
+        "text": "Favoritos, seguimiento de proveedores y publicaciones."
+      },
+      {
+        "label": "collaboration",
+        "text": "Sesiones de catálogo compartido y registros de llamadas."
+      }
+    ],
+    "right_title": "Compra y trazabilidad",
+    "right": [
+      {
+        "label": "quotations",
+        "text": "Solicitudes, versiones de cotizaciones y órdenes de compra."
+      },
+      {
+        "label": "notifications",
+        "text": "Notificaciones e historial de cambios de estado."
+      }
+    ],
+    "note": "Estos módulos cuentan con entidades y datos de ejemplo. Sus modelos no equivalen a flujos completos de interfaz, chat en tiempo real o llamadas operativas.",
+    "sources": "messaging/models.py; social/models.py; collaboration/models.py; quotations/models.py; notifications/models.py"
+  },
+  {
+    "kind": "process",
+    "title": "El recorrido comercial previsto",
+    "summary": "La búsqueda pública funciona hoy. El resto describe el flujo que el proyecto busca completar.",
+    "left_title": "Descubrimiento",
+    "left": [
+      {
+        "label": "01  Buscar",
+        "text": "Definir el producto, el país y el alcance de la búsqueda."
+      },
+      {
+        "label": "02  Explorar",
+        "text": "Revisar empresas y desplegar sus productos activos."
+      }
+    ],
+    "right_title": "Continuidad prevista",
+    "right": [
+      {
+        "label": "03  Conversar y cotizar",
+        "text": "Compartir requisitos y recibir propuestas comerciales."
+      },
+      {
+        "label": "04  Registrar la compra",
+        "text": "Vincular una cotización con una orden y conservar su historial."
+      }
+    ],
+    "note": "Los pasos 1 y 2 están disponibles en la página principal. Los pasos 3 y 4 tienen soporte de modelos y requieren completar servicios e interfaz.",
+    "sources": "app/views.py; app/templates/app/home.html; messaging/models.py; quotations/models.py"
+  },
+  {
+    "kind": "columns",
+    "title": "Cómo está construido",
+    "summary": "Una aplicación Django con responsabilidades separadas por dominio.",
+    "left_title": "Interfaz y aplicación",
+    "left": [
+      {
+        "label": "Django y Python",
+        "text": "Vistas, rutas, autenticación y reglas de datos."
+      },
+      {
+        "label": "Plantillas y Tailwind CSS",
+        "text": "Interfaz adaptable con estilos compilados localmente."
+      },
+      {
+        "label": "Búsqueda en el servidor",
+        "text": "Los filtros funcionan sin depender de JavaScript."
+      }
+    ],
+    "right_title": "Datos y consistencia",
+    "right": [
+      {
+        "label": "SQLite en desarrollo",
+        "text": "Base de datos local para ejecutar y demostrar el proyecto."
+      },
+      {
+        "label": "Migraciones y restricciones",
+        "text": "Relaciones, unicidad y validaciones a nivel de base de datos."
+      },
+      {
+        "label": "Seeders y pruebas",
+        "text": "Datos ficticios repetibles y comprobaciones de comportamiento."
+      }
+    ],
+    "note": "SQLite describe la configuración actual. Servicios como PostgreSQL, API, almacenamiento externo y tiempo real requieren decisiones de implementación y despliegue.",
+    "sources": "core/settings.py; package.json; app/views.py; core/seeding.py; app/tests.py"
+  },
+  {
+    "kind": "demo",
+    "title": "La experiencia actual",
+    "summary": "Una interfaz futurista para descubrir productos y proveedores.",
+    "left_title": "Disponible en la página principal",
+    "left": [
+      {
+        "label": "Buscar",
+        "text": "Por producto o empresa."
+      },
+      {
+        "label": "Filtrar",
+        "text": "Por categoría, país y alcance."
+      },
+      {
+        "label": "Explorar",
+        "text": "Información de empresa y catálogo activo."
+      }
+    ],
+    "right_title": "",
+    "right": [],
+    "note": "La captura corresponde a la interfaz desarrollada. Las cifras visibles son datos del directorio de demostración y pueden cambiar.",
+    "sources": "app/templates/app/home.html; app/views.py"
+  },
+  {
+    "kind": "columns",
+    "title": "Estado actual del proyecto",
+    "summary": "La base de datos y la búsqueda pública ya permiten demostrar la idea.",
+    "left_title": "Implementado",
+    "left": [
+      {
+        "label": "Página pública",
+        "text": "Diseño adaptable, directorio y filtros combinados."
+      },
+      {
+        "label": "Base de datos",
+        "text": "Módulos con migraciones, relaciones y datos de ejemplo."
+      },
+      {
+        "label": "Usuarios del sistema",
+        "text": "Autenticación Django con perfil complementario uno a uno."
+      }
+    ],
+    "right_title": "Por completar",
+    "right": [
+      {
+        "label": "Operación por empresa",
+        "text": "Permisos y pantallas de gestión de productos y compras."
+      },
+      {
+        "label": "Servicios comerciales",
+        "text": "Conversaciones y cotizaciones completas en la interfaz."
+      },
+      {
+        "label": "Producción",
+        "text": "Despliegue, seguridad y servicios para operación real."
+      }
+    ],
+    "note": "La presentación distingue entidades de datos de funcionalidades terminadas. No afirma que chat, llamadas, pagos o logística estén operativos.",
+    "sources": "app/views.py; core/settings.py; accounts/models.py; _docs/especificaciones-tecnicas.md"
+  },
+  {
+    "kind": "columns",
+    "title": "Próximas etapas recomendadas",
+    "summary": "La expansión global requiere completar la operación comercial y validar cada mercado.",
+    "left_title": "Primero: operación de empresas",
+    "left": [
+      {
+        "label": "Gestión y permisos",
+        "text": "Administrar catálogos y separar el acceso de cada empresa."
+      },
+      {
+        "label": "Cotización completa",
+        "text": "Conectar solicitudes, respuestas y órdenes con sus pantallas."
+      }
+    ],
+    "right_title": "Después: crecimiento internacional",
+    "right": [
+      {
+        "label": "Idioma y moneda",
+        "text": "Definir traducciones y reglas comerciales para distintas monedas."
+      },
+      {
+        "label": "Logística y mercados",
+        "text": "Evaluar fletes, condiciones de entrega y requisitos de importación."
+      },
+      {
+        "label": "Infraestructura",
+        "text": "Preparar despliegue, observabilidad y servicios según la demanda."
+      }
+    ],
+    "note": "Estas etapas son recomendaciones, no funciones actuales ni compromisos de cobertura, cumplimiento o disponibilidad comercial.",
+    "sources": "Recomendaciones basadas en el estado del repositorio y _docs/especificacion-funcional.md"
+  }
+]

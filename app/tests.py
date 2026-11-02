@@ -84,3 +84,22 @@ class HomeTests(TestCase):
         response = self.client.get(reverse("app:home"), {"origen": "ZZ", "alcance": "local"})
         self.assertEqual(response.context["scope"], "global")
         self.assertEqual(response.context["result_count"], 1)
+
+
+class PresentationTests(TestCase):
+    def test_presentation_explains_all_modules(self):
+        response = self.client.get(reverse("app:presentation"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["slides"]), 11)
+        for module in ["accounts", "companies", "catalog", "app", "core",
+                       "messaging", "social", "collaboration", "quotations", "notifications"]:
+            self.assertContains(response, module)
+        self.assertContains(response, "Por completar")
+        self.assertContains(response, "Descargar PPTX")
+
+    def test_pptx_download_is_an_attachment(self):
+        response = self.client.get(reverse("app:presentation_download"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("attachment", response["Content-Disposition"])
+        self.assertTrue(next(iter(response.streaming_content)).startswith(b"PK"))
+        response.close()

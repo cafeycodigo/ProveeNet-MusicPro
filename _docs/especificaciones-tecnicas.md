@@ -81,8 +81,9 @@ La autenticación usa el usuario integrado de Django (`auth.User`).
 y `nacionalidad`. Nombres, correo, credenciales, grupos y permisos permanecen
 en el usuario de Django. Las relaciones de negocio usan `settings.AUTH_USER_MODEL`.
 
-`core/urls.py` expone únicamente `/admin/`. Los modelos de negocio todavía no
-están registrados en el administrador y no hay endpoints API.
+`core/urls.py` incluye la parte pública y el administrador en `/admin/`.
+Los 29 modelos de dominio están registrados en el administrador; usuarios y grupos
+conservan la administración estándar de Django. No hay endpoints API.
 Las vistas de dominio y la parte pública siguen siendo esqueletos de aplicación.
 
 La configuración es de desarrollo: `DEBUG = True`, `ALLOWED_HOSTS = []`,
@@ -236,3 +237,22 @@ Los logos están en `companies/static/companies/demo/`. `seed_companies` asigna
 el archivo correspondiente al nombre y sustituye las antiguas referencias a
 los dos logos compartidos. Los logos personalizados se conservan. No hay cambios
 de modelo ni migraciones nuevas. Ver [inventario y prompts](logos-empresas.md).
+
+
+## 14. Administrador de Django
+
+Cada aplicación con modelos declara sus registros en `admin.py`. Las listas
+incluyen columnas del dominio, búsquedas por identificador y campos relacionados,
+filtros de estado o tipo, navegación por fecha cuando corresponde y paginación
+de 50 registros. Las relaciones usan autocompletado y carga conjunta para listas.
+Perfiles, empresas e imágenes de productos incluyen vista previa de imagen.
+
+El acceso sigue los permisos estándar de Django. Para crear una cuenta con acceso:
+
+```powershell
+python manage.py createsuperuser
+```
+
+Los usuarios demo continúan sin permisos de administrador. La configuración no
+requiere migraciones. Se verificaron las 87 pantallas de listado, creación y
+edición de los 29 modelos con los registros simulados, sin guardar datos de prueba.

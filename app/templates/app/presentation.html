@@ -1,0 +1,53 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProveeNet · Presentación del proyecto</title>
+  <link rel="stylesheet" href="{% static 'app/css/site.css' %}">
+  <link rel="stylesheet" href="{% static 'app/css/presentation.css' %}">
+  <script src="{% static 'app/js/presentation.js' %}" defer></script>
+</head>
+<body class="presentation-page">
+  <header class="presentation-header">
+    <a class="brand" href="{% url 'app:home' %}">ProveeNet</a>
+    <span class="presentation-caption">Presentación del proyecto</span>
+    <div class="presentation-tools">
+      <a href="{% url 'app:presentation_download' %}">Descargar PPTX ↗</a>
+      <button id="fullscreen" type="button" hidden>Pantalla completa</button>
+      <button id="print-deck" type="button">Imprimir / PDF</button>
+    </div>
+  </header>
+  <main class="presentation-deck" id="deck" aria-label="Presentación de ProveeNet">
+    {% for slide in slides %}
+    <section class="presentation-slide layout-{{ slide.kind }}" id="diapositiva-{{ forloop.counter }}" aria-labelledby="slide-title-{{ forloop.counter }}" tabindex="-1">
+      <div class="slide-content">
+        <p class="slide-kicker">PROVEENET / EL PROYECTO</p>
+        <h1 id="slide-title-{{ forloop.counter }}">{{ slide.title }}</h1>
+        <p class="slide-summary">{{ slide.summary }}</p>
+        {% if slide.kind == 'cover' %}
+          <img class="cover-globe" src="{% static 'app/images/global-network.svg' %}" width="600" height="600" alt="Red conceptual de conexiones globales">
+          <p class="cover-caption">Productos locales. Oportunidades internacionales.</p>
+        {% else %}
+          <div class="slide-columns">
+            <div><h2>{{ slide.left_title }}</h2><dl>{% for item in slide.left %}<div><dt>{{ item.label }}</dt><dd>{{ item.text }}</dd></div>{% endfor %}</dl></div>
+            {% if slide.kind == 'demo' %}
+              <figure class="demo-figure"><img src="{% static 'app/images/presentation-home.jpg' %}" width="1265" height="712" alt="Página principal de ProveeNet con el buscador y el globo de conexiones"><figcaption><a href="{% url 'app:home' %}">Abrir la plataforma ↗</a></figcaption></figure>
+            {% else %}
+              <div><h2>{{ slide.right_title }}</h2><dl>{% for item in slide.right %}<div><dt>{{ item.label }}</dt><dd>{{ item.text }}</dd></div>{% endfor %}</dl></div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+      <details class="slide-note"><summary>Contexto de esta diapositiva</summary><p>{{ slide.note }}</p></details>
+    </section>
+    {% endfor %}
+  </main>
+  <nav class="presentation-controls" aria-label="Controles de la presentación" hidden>
+    <button id="previous-slide" type="button" aria-label="Diapositiva anterior">← <span>Anterior</span></button>
+    <div class="slide-selector"><label for="slide-index" class="sr-only">Ir a diapositiva</label><select id="slide-index">{% for slide in slides %}<option value="{{ forloop.counter0 }}">{{ forloop.counter|stringformat:"02d" }} · {{ slide.title }}</option>{% endfor %}</select><span id="slide-status" role="status" aria-live="polite"></span></div>
+    <button id="next-slide" type="button" aria-label="Diapositiva siguiente"><span>Siguiente</span> →</button>
+  </nav>
+  <progress class="deck-progress" max="{{ slides|length }}" value="1" aria-label="Progreso de la presentación" hidden></progress>
+</body>
+</html>
