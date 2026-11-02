@@ -30,13 +30,15 @@
         <a class="nav-link" href="#categorias">Categorías</a>
         <a class="nav-link" href="#como-funciona">Cómo funciona</a>
         <a class="nav-link" href="{% url 'app:presentation' %}">El proyecto</a>
+        <a class="nav-link sm:hidden" href="{% url 'accounts:login' %}">Acceder</a>
       </nav>
-      <a class="button button-outline hidden sm:inline-flex" href="#buscador">Buscar proveedores <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#arrow"/></svg></a>
+      <a class="button button-outline hidden sm:inline-flex" href="{% if request.user.is_authenticated %}{% url 'app:dashboard' %}{% else %}{% url 'accounts:login' %}{% endif %}">{% if request.user.is_authenticated %}Mi espacio{% else %}Iniciar sesión{% endif %} <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#arrow"/></svg></a>
       <details class="mobile-nav lg:hidden">
         <summary class="nav-link cursor-pointer p-2">Menú</summary>
         <nav class="absolute right-4 z-10 mt-3 flex flex-col gap-5 rounded-lg border border-rule bg-surface p-6" aria-label="Navegación móvil">
           <a class="nav-link" href="#proveedores">Proveedores</a><a class="nav-link" href="#categorias">Categorías</a><a class="nav-link" href="#como-funciona">Cómo funciona</a>
         <a class="nav-link" href="{% url 'app:presentation' %}">El proyecto</a>
+        <a class="nav-link sm:hidden" href="{% url 'accounts:login' %}">Acceder</a>
         </nav>
       </details>
     </div>

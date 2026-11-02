@@ -200,6 +200,7 @@ def dashboard(request, section="inicio"):
         "table_headers": headers, "table_rows": rows,
         "table_title": MENU[overview_section][0] if section == "inicio" else MENU[section][0],
         "overview_section": overview_section, "query": request.GET.get("q", "")[:180],
+        "search_section": "catalogo" if ctx.mode == "supplier" else "explorar" if ctx.mode == "individual" else "productos",
         "searchable": section in {"empresas", "proveedores", "productos", "catalogo", "explorar", "usuarios", "equipo", "cotizaciones", "pedidos", "mensajes", "ofertas", "categorias", "publicaciones"},
         "company_options": company_options,
         "notifications": data["notifications"].order_by("-fecha_creacion")[:4],

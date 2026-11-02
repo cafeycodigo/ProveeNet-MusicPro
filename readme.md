@@ -4,6 +4,15 @@ Plataforma B2B para conectar empresas compradoras y proveedoras. El proyecto
 contempla catálogos de productos, relaciones comerciales, conversaciones,
 cotizaciones y órdenes de compra.
 
+## Autoría y proyecto de origen
+
+Desarrollado por [bemtorres](https://github.com/bemtorres) para
+[Café y Código](https://cafeycodigo.org). Este proyecto nace de la idea de
+[MusicPro Core](https://github.com/cafeycodigo/musicpro-core), cuya
+[aplicación de referencia](https://cafeycodigo.github.io/musicpro-core/) presenta
+el proyecto MusicPro. ProveeNet desarrolla la parte orientada al docente dentro
+de esa propuesta.
+
 ![Vista conceptual de ProveeNet](simulations.png)
 
 Actualmente cuenta con la base del backend en Django: 29 modelos, migraciones
@@ -118,3 +127,35 @@ navegación con flechas, selector, pantalla completa, impresión a PDF y descarg
 del PPTX editable en `entregables/ProveeNet-presentacion.pptx`. El contenido web
 se mantiene en `app/presentation_data.json`. Las funciones previstas se distinguen
 de las que ya están implementadas.
+
+## Acceso y espacio de trabajo
+
+`/login` inicia sesión con el usuario integrado de Django y redirige a `/home`.
+El inicio usa el diseño de `simulations.png`: encabezado claro, sidebar azul oscuro
+y controles índigo. Cada sección del sidebar abre un listado o una ficha real.
+
+- Administrador de plataforma: usuario `is_superuser`, resumen global de empresas,
+  usuarios, catálogo, categorías y cotizaciones. Acceso a la administración avanzada.
+- Comprador: solicitudes y cotizaciones de la empresa activa, pedidos y favoritos.
+- Proveedor: catálogo propio, solicitudes recibidas, cotizaciones y pedidos.
+- Administrador de empresa: añade el acceso a los miembros de su empresa.
+- Usuario sin empresa: exploración pública, favoritos y notificaciones personales.
+
+El selector de espacio valida las membresías activas. Una empresa compradora y
+proveedora puede cambiar de vista. Los usuarios normales nunca eligen un rol libre:
+la aplicación lo resuelve a partir de su membresía y del tipo de empresa. El
+administrador de plataforma puede consultar espacios empresariales desde el selector.
+Las conversaciones de miembros no administradores requieren participación, además
+de pertenecer a una empresa de la conversación. Las notificaciones son personales.
+
+Para crear un administrador local con contraseña aleatoria:
+
+```powershell
+python manage.py create_platform_admin
+```
+
+El comando muestra la contraseña inicial una vez y conserva cuentas existentes.
+También puedes usar `createsuperuser` y gestionar su contraseña con `changepassword`.
+El cierre de sesión y el cambio de contexto usan POST con CSRF. Los listados comerciales
+son vistas de consulta: enviar mensajes, realizar llamadas o editar cotizaciones
+requiere completar esos módulos y no se simula como una operación terminada.

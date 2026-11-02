@@ -64,7 +64,7 @@ def get_portal_context(request):
     membership = next((item for item in memberships if str(item.empresa_id) == str(selected)), None)
     company = None
     if request.user.is_superuser:
-        if selected:
+        if selected and str(selected).isdecimal():
             company = Empresa.objects.select_related("pais").filter(pk=selected, estado="activa").first()
         if company is None:
             return PortalContext(None, None, "platform", False, memberships)
