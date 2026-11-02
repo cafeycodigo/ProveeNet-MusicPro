@@ -146,3 +146,23 @@ class PortalTests(TestCase):
         call_command("create_platform_admin", username="platform", stdout=StringIO())
         self.admin.refresh_from_db()
         self.assertEqual(self.admin.password, before)
+
+    def test_every_visible_sidebar_section_is_accessible(self):
+        for user in [self.admin, self.buyer, self.seller, self.member, self.individual]:
+            self.client.force_login(user)
+            home = self.client.get(reverse("app:dashboard"))
+            for item in home.context["navigation"]:
+                with self.subTest(user=user.username, section=item["key"]):
+                    response = self.client.get(self.section(item["key"]))
+                    self.assertEqual(response.status_code, 200)
+
+    def test_platform_admin_can_inspect_company_space(self):
+        self.client.force_login(self.admin)
+        response = self.client.post(reverse("app:switch_context"), {"company": self.sellco.pk, "mode": "supplier"})
+        self.assertRedirects(response, reverse("app:dashboard"))
+        response = self.client.get(reverse("app:dashboard"))
+        self.assertEqual(response.context["ctx"].company.pk, self.sellco.pk)
+        self.assertEqual(response.context["ctx"].mode, "supplier")
+        self.client.post(reverse("app:switch_context"), {"company": ""})
+        response = self.client.get(reverse("app:dashboard"))
+        self.assertTrue(response.context["ctx"].platform)
