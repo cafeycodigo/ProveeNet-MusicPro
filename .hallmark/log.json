@@ -1,6 +1,15 @@
 [
   {
     "date": "2026-11-02",
+    "macrostructure": "Map / Diagram",
+    "theme": "global network",
+    "nav": "N1b",
+    "footer": "Ft1",
+    "enrichment": "native SVG globe",
+    "brief": "Abastecimiento futurista local e internacional"
+  },
+  {
+    "date": "2026-11-02",
     "macrostructure": "Split Studio",
     "theme": "enterprise navy",
     "nav": "N9",

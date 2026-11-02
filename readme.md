@@ -98,3 +98,8 @@ sus productos activos. Las fuentes web tienen alternativas locales.
 
 El catálogo demo reutiliza [20 imágenes genéricas WebP](_docs/imagenes-productos.md),
 dos por categoría, para ilustrar los productos sin depender de servicios externos.
+
+El buscador permite elegir alcance global, local o internacional respecto al campo
+`Tu país`. El país de referencia predeterminado es Chile cuando existe en el catálogo;
+si no hay un país válido seleccionado, la búsqueda usa alcance global. Las cifras de
+países y proveedores corresponden a empresas activas registradas, no a cobertura prometida.

@@ -112,3 +112,6 @@ La simulación no ejecuta llamadas, envíos de correo, WebSockets ni transaccion
 
 Las pruebas verifican repetibilidad, conservación de personalizaciones,
 contraseñas, integridad de importes y pertenencia de remitentes a sus empresas.
+
+Las empresas usan doce identidades visuales relacionadas con sus nombres,
+compartidas únicamente entre variantes de la misma marca. Ver [logos de empresas](logos-empresas.md).

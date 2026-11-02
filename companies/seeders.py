@@ -3,6 +3,7 @@ from django.templatetags.static import static
 
 from companies.models import Pais, Empresa, UsuarioEmpresa
 from core.seeding import ensure
+from companies.demo_branding import COMPANY_BRANDS, seed_brand_logo
 
 
 def seed(context):
@@ -32,20 +33,21 @@ def seed(context):
                        ("EG", "Egipto"), ("KR", "Corea del Sur")]:
         countries.append(ensure(Pais, codigo_iso=code, defaults={"nombre": name}))
     companies = [comprador, proveedor]
-    names = ["Andes Audio", "Rhein Instruments", "Samba Sound", "Azteca Music", "Sakura Audio",
-             "Mumbai Stage", "Dakar Sonido", "Paris Acoustics", "Nile Electronics", "Seoul Pro Audio"]
+    names = [name for name, _ in COMPANY_BRANDS]
     for index in range(2, 20 * context["scale"]):
         supplier = index % 2 == 1
-        companies.append(ensure(Empresa, razon_social=f"{names[index % 10]} Demo {index + 1:03d}", defaults={
+        company = ensure(Empresa, razon_social=f"{names[index % 10]} Demo {index + 1:03d}", defaults={
             "nombre_comercial": f"{names[index % 10]} {index + 1:03d}", "pais": countries[index % 10],
             "identificacion_fiscal": f"DEMO-TAX-{index + 1:04d}", "ciudad": "Ciudad de demostración",
             "direccion": f"Avenida del Comercio {index + 100}",
             "descripcion": "Empresa ficticia dedicada a equipamiento musical y soluciones profesionales.",
             "sitio_web": f"https://empresa{index + 1}.example.com",
-            "logo_url": static("companies/demo/techindustrial.webp" if supplier else "companies/demo/industrial-minera.webp"),
+            "logo_url": static(f"companies/demo/{COMPANY_BRANDS[index % 10][1]}.webp"),
             "es_proveedor": supplier, "es_comprador": not supplier,
             "verificada": index % 4 != 0, "estado": "activa",
-        }))
+        })
+        seed_brand_logo(company, COMPANY_BRANDS[index % 10][1])
+        companies.append(company)
     teams = {company.pk: [] for company in companies}
     for index, user in enumerate(context["users"]):
         company = companies[index % len(companies)]

@@ -223,3 +223,16 @@ migraciones para este cambio. Las imágenes se incluyen con `collectstatic` en d
 El osciloscopio inicial usa la imagen genérica de instrumento de medición de
 accesorios; las demás imágenes ilustran tipos de equipos y no especificaciones
 exactas de cada modelo ficticio. Ver [inventario y prompts](imagenes-productos.md).
+
+
+## 13. Identidad visual de empresas
+
+Las veinte empresas demo usan doce identidades: Industrial Minera,
+TechIndustrial y diez marcas musicales. Cada variante `Demo NNN` comparte
+la identidad de su marca; el rol de compradora o proveedora no determina el logo.
+
+`companies/demo_branding.py` define la correspondencia entre marca y archivo WebP.
+Los logos están en `companies/static/companies/demo/`. `seed_companies` asigna
+el archivo correspondiente al nombre y sustituye las antiguas referencias a
+los dos logos compartidos. Los logos personalizados se conservan. No hay cambios
+de modelo ni migraciones nuevas. Ver [inventario y prompts](logos-empresas.md).

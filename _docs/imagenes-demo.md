@@ -94,3 +94,9 @@ Use case: logo-brand. Generate a polished standalone square corporate avatar log
 ```text
 Use case: logo-brand. Generate a polished standalone square corporate avatar logo for fictional B2B company TechIndustrial GmbH. Symbol only, no text or letters. abstract precision waveform and industrial measurement motif, teal and deep navy. Flat clean geometric brand mark, strong silhouette, large centered symbol with generous padding for circular avatar cropping, solid off-white background, no mockups, no shadows, no gradients, no watermark. This is a new fictional brand.
 ```
+
+## Ampliación de logos
+
+Las marcas musicales ahora tienen diez logos adicionales asociados a sus nombres.
+Este inventario conserva los retratos y las dos identidades iniciales; los nuevos
+archivos y prompts están en [Logos de empresas](logos-empresas.md).

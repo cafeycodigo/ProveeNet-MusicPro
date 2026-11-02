@@ -169,3 +169,109 @@
   }
 }
 
+
+/* Hallmark · genre: atmospheric · macrostructure: Map / Diagram
+ * theme: global network · nav: N1b · footer: Ft1 · enrichment: native SVG globe
+ * pre-emit critique: P5 H5 E5 S5 R4 V5 */
+@theme {
+  --color-paper: oklch(15% 0.018 225);
+  --color-surface: oklch(19% 0.021 225);
+  --color-ink: oklch(96% 0.008 210);
+  --color-muted: oklch(73% 0.024 215);
+  --color-rule: oklch(31% 0.029 220);
+  --color-accent: oklch(84% 0.145 175);
+  --color-accent-dark: oklch(76% 0.14 175);
+  --color-tint: oklch(25% 0.048 190);
+  --color-dark: oklch(12% 0.02 225);
+  --color-on-dark: oklch(96% 0.008 210);
+  --color-dark-muted: oklch(74% 0.024 215);
+  --color-dark-rule: oklch(32% 0.035 220);
+  --color-hero-highlight: oklch(84% 0.145 175);
+  --color-hero-line: oklch(45% 0.06 200);
+  --color-logo-surface: oklch(98% 0.004 220);
+  --color-shadow: oklch(8% 0.015 225);
+}
+@layer components {
+  .site-header { background: var(--color-paper); }
+  .site-header .shell { min-height: 5rem; }
+  .brand { font-size: 1.5rem; letter-spacing: -.055em; }
+  .brand-mark { border: 1px solid var(--color-accent); background: var(--color-tint); color: var(--color-accent); border-radius: .5rem; }
+  .site-header .button-outline { border-color: var(--color-rule); background: var(--color-surface); border-radius: .5rem; }
+  .corporate-hero { background: var(--color-paper); }
+  .hero-inner { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  .global-hero-layout { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 1.5rem; align-items: center; }
+  .global-kicker { display: flex; align-items: center; gap: .625rem; font-size: .625rem; letter-spacing: .17em; color: var(--color-muted); margin-bottom: 1.5rem; }
+  .status-dot { display: inline-block; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-accent); flex: none; }
+  .hero-title { font-size: clamp(3rem,5.5vw,4.75rem); font-weight: 500; line-height: 1.08; letter-spacing: -.055em; }
+  .hero-description { margin-top: 1.5rem; max-width: 44ch; font-size: .9375rem; line-height: 1.85; }
+  .hero-actions { display: flex; align-items: center; gap: 1.75rem; margin-top: 2rem; flex-wrap: wrap; }
+  .hero-link { margin-top: 0; font-size: .8125rem; }
+  .button { border-radius: .5rem; }
+  .button-primary { color: var(--color-dark); font-weight: 700; }
+  .button-outline { background: var(--color-surface); }
+  .network-stats { display: flex; gap: 2rem; padding-top: 2rem; margin-top: 2.5rem; border-top: 1px solid var(--color-rule); max-width: 29rem; }
+  .network-stats div { display: flex; flex-direction: column; gap: .5rem; }
+  .network-stats strong { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; letter-spacing: -.04em; }
+  .network-stats span { font-size: .625rem; line-height: 1.6; color: var(--color-muted); }
+  .world-visual { position: relative; min-width: 0; }
+  .world-visual img { width: 100%; height: auto; }
+  .world-label { position: absolute; display: flex; gap: .625rem; align-items: center; padding: .75rem 1rem; background: var(--color-surface); border: 1px solid var(--color-rule); border-radius: .375rem; color: var(--color-muted); font-size: .5625rem; letter-spacing: .09em; white-space: nowrap; }
+  .world-label-top { top: 7%; right: 0; }
+  .world-label-bottom { bottom: 15%; left: 0; }
+  .world-cross { color: var(--color-accent); font-size: 1rem; }
+  .world-visual figcaption { text-align: center; color: var(--color-muted); font-size: .6875rem; margin-top: -.75rem; }
+  .discovery-section { margin-top: 0; padding-bottom: 2.5rem; }
+  .search-panel { background: var(--color-surface); border-radius: .75rem; box-shadow: 0 16px 36px -28px var(--color-shadow); }
+  .scope-toolbar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .875rem 1.25rem; border-bottom: 1px solid var(--color-rule); }
+  .scope-options { display: flex; flex-wrap: wrap; gap: .375rem; }
+  .scope-options label { position: relative; cursor: pointer; }
+  .scope-options input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .scope-options span { display: block; font-size: .75rem; padding: .625rem .875rem; border-radius: .375rem; color: var(--color-muted); }
+  .scope-options input:checked + span { background: var(--color-tint); color: var(--color-accent); }
+  .scope-options input:focus-visible + span { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .scope-options label:hover span { color: var(--color-ink); }
+  .origin-field { display: flex; align-items: center; gap: .75rem; font-size: .75rem; }
+  .origin-field label { color: var(--color-muted); white-space: nowrap; }
+  .origin-field select { max-width: 11rem; background: var(--color-surface); color: var(--color-ink); padding: .5rem; border: 1px solid var(--color-rule); border-radius: .375rem; }
+  .field { padding-block: 1.125rem; }
+  .field label { font-size: .6875rem; }
+  .field input, .field select { background: var(--color-surface); }
+  .scope-help { margin-top: .875rem; color: var(--color-muted); font-size: .6875rem; line-height: 1.7; }
+  .category-link { background: var(--color-paper); border: 1px solid var(--color-rule); border-radius: 2rem; font-size: .75rem; }
+  .category-link:hover, .category-link[aria-current="true"] { border-color: var(--color-accent); }
+  .value-strip { background: var(--color-paper); }
+  .value-strip .shell { padding-block: 1.75rem; }
+  .value-strip .font-display { font-size: 1.0625rem; }
+  .directory-layout { padding-block: 3.5rem; }
+  .directory-title { font-size: clamp(1.5rem,3vw,2rem); }
+  .enterprise-supplier, .enterprise-supplier + .enterprise-supplier { border-radius: .75rem; }
+  .enterprise-supplier:hover { border-color: var(--color-hero-line); }
+  .supplier-logo { background: var(--color-logo-surface); color: var(--color-dark); border: 0; border-radius: .5rem; }
+  .connection-aside { border: 1px solid var(--color-rule); background: var(--color-surface); border-radius: .75rem; }
+  .connection-aside h2 { font-weight: 500; }
+  .workflow-section { background: var(--color-paper); }
+  .workflow-section h2 { font-size: 2.25rem; }
+  .enterprise-footer { background: var(--color-dark); }
+  @media (max-width: 1023px) {
+    .global-hero-layout { grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 1rem; }
+    .hero-title { font-size: 3rem; }
+    .network-stats { gap: 1.25rem; }
+    .world-label { font-size: .5rem; padding: .625rem; }
+  }
+  @media (max-width: 639px) {
+    .hero-inner { padding-top: 2.5rem; padding-bottom: 2rem; }
+    .global-hero-layout { grid-template-columns: minmax(0,1fr); gap: 1.5rem; }
+    .hero-title { font-size: clamp(2.5rem,10.5vw,3.75rem); }
+    .hero-actions { gap: 1.25rem; }
+    .hero-actions .button { padding-inline: 1rem; font-size: .8125rem; }
+    .hero-description { font-size: .875rem; }
+    .world-visual { max-width: 25rem; width: 100%; margin-inline: auto; }
+    .network-stats { margin-top: 2rem; padding-top: 1.5rem; }
+    .scope-toolbar { align-items: stretch; flex-direction: column; padding: .75rem; }
+    .scope-options { justify-content: space-between; gap: 0; }
+    .scope-options span { font-size: .6875rem; padding: .625rem; }
+    .origin-field { justify-content: space-between; }
+    .origin-field select { max-width: 70%; }
+    .directory-layout { padding-block: 2.5rem; }
+  }
+}
